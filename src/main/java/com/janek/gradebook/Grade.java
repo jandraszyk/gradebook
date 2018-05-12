@@ -1,7 +1,12 @@
 package com.janek.gradebook;
 
+import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.*;
@@ -10,29 +15,69 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-@XmlRootElement(name = "grade")
-@XmlType(propOrder = {"id", "course", "value", "date"})
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@Embedded
+@Entity("grades")
 public class Grade {
 
+//    @InjectLinks({@InjectLink(value = "/students/{studentIndex}/grades/{id}", rel = "self"), @InjectLink(value = "/students/{studentIndex}/grades", rel = "parent")})
+//    @XmlElement(name = "link")
+//    @XmlElementWrapper(name = "links")
+//    @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+//    List<Link> links;
+
+    @XmlTransient
+    private long studentIndex;
+
+    @Id
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    ObjectId _id;
+
     private int id;
-    private static AtomicLong idCount = new AtomicLong();
+    private static int idNumber = 0;
     private float value;
     private Date date;
+
+    @Embedded
     private Course course;
 
-    /*@InjectLinks({
-            @InjectLink(value = "students/{index}/grades/{id}", rel = "self"),
-            @InjectLink(value = "students/grades",rel = "parent"),
-    })
-    @XmlElement(name = "link")
-    @XmlElementWrapper(name = "links")
-    @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
-    private List<Link> links;*/
 
     public Grade() {
     }
 
-    @XmlAttribute
+    public Grade(float value, Date date, Course course) {
+        this.id = idNumber++;
+        this.value = value;
+        this.date = date;
+        this.course = course;
+    }
+
+    public Grade(Grade grade) {
+        this.id = idNumber++;
+        this.studentIndex  = grade.getStudentIndex();
+        this.value = grade.getValue();
+        this.date = grade.getDate();
+        this.course = grade.getCourse();
+    }
+
+    @XmlTransient
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
+
+    public long getStudentIndex() {
+        return studentIndex;
+    }
+
+    public void setStudentIndex(long studentIndex) {
+        this.studentIndex = studentIndex;
+    }
+
     public int getId() {
         return id;
     }
@@ -41,11 +86,6 @@ public class Grade {
         this.id = id;
     }
 
-    public void setId() {
-        this.id = (int) idCount.getAndIncrement();
-    }
-
-    @XmlElement
     public float getValue() {
         return value;
     }
@@ -62,7 +102,6 @@ public class Grade {
         }
     }
 
-    @XmlElement
     public Date getDate() {
         return date;
     }
@@ -71,7 +110,6 @@ public class Grade {
         this.date = date;
     }
 
-    @XmlElement
     public Course getCourse() {
         return course;
     }

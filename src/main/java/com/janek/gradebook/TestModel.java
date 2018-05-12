@@ -1,5 +1,14 @@
+/*
 package com.janek.gradebook;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
+
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,20 +21,23 @@ public class TestModel {
     private static final AtomicLong studentIdCounter = new AtomicLong();
     private static final AtomicLong courseIdCounter = new AtomicLong();
 
-
     static {
 
-        /**
+        */
+/**
          *  Setup courses
-         */
+         *//*
+
         Course course1 = addCourse((int)courseIdCounter.getAndIncrement(),"Marcin Szelag","ZWiWO");
         courseList.add(course1);
         Course course2 = addCourse((int) courseIdCounter.getAndIncrement(),"Andrzej Golota", "Boxing");
         courseList.add(course2);
-
-        /**
+        Databasemodel.getDatastore().save(courseList);
+        */
+/**
          * Setup grades - student1
-         */
+         *//*
+
         ArrayList<Grade> gradesStudent1 = new ArrayList<>();
         Grade grade1Student1 = addGrade(4.0f,course1,new Date("2018/10/14"),(int) gradeIdCounter.getAndIncrement());
         gradesStudent1.add(grade1Student1);
@@ -49,6 +61,7 @@ public class TestModel {
         Student student2 = addStudent("Stefan", "Kowalski",new Date("1995/04/26"),(int) studentIdCounter.getAndIncrement(),gradesStudent2);
         students.add(student2);
 
+        Databasemodel.getDatastore().save(students);
     }
 
     private TestModel() {
@@ -93,3 +106,4 @@ public class TestModel {
         return student;
     }
 }
+*/
