@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.*;
 
 import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.*;
@@ -21,11 +18,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Entity("student")
 @XmlRootElement
+@XmlType(propOrder = {"index", "firstName", "lastName", "birthday", "grades", "links"})
 public class Student {
 
     @Id
     @XmlTransient
-    private ObjectId id;
+    private ObjectId _id;
 
     @Indexed(name = "index", unique = true)
     private long index;
@@ -68,11 +66,11 @@ public class Student {
 
     @XmlTransient
     public ObjectId getId() {
-        return id;
+        return _id;
     }
 
     public void setId(ObjectId id) {
-        this.id = id;
+        this._id = id;
     }
 
     public long getIndex() {

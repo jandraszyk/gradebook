@@ -39,7 +39,7 @@ public class Grade {
     private float value;
     private Date date;
 
-    @Embedded
+    @Reference
     private Course course;
 
 
@@ -48,7 +48,7 @@ public class Grade {
 
     public Grade(float value, Date date, Course course) {
         this.id = idNumber++;
-        this.value = value;
+        setValue(value);
         this.date = date;
         this.course = course;
     }
@@ -56,7 +56,7 @@ public class Grade {
     public Grade(Grade grade) {
         this.id = idNumber++;
         this.studentIndex  = grade.getStudentIndex();
-        this.value = grade.getValue();
+        setValue(grade.getValue());
         this.date = grade.getDate();
         this.course = grade.getCourse();
     }

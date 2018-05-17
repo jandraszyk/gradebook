@@ -25,46 +25,36 @@ public class GradebookService {
                                    @QueryParam("lastName") String lastName,
                                    @QueryParam("birthday") Date birthday,
                                    @QueryParam("dateRelation") String dateRelation) {
-//        Query<Student> studentQuery = Databasemodel.getDatastore().createQuery(Student.class)
-//                .field("firstName").containsIgnoreCase(firstName)
-//                .field("lastName").containsIgnoreCase(lastName);
 
         Query<Student> studentQuery = Databasemodel.getDatastore().createQuery(Student.class);
-        studentQuery.or(
-                studentQuery.and(
-                        studentQuery.criteria("firstName").equal(firstName),
-                        studentQuery.criteria("lastName").equal(lastName)
+        if(firstName != null) {
+            studentQuery.field("firstName").containsIgnoreCase(firstName);
+        }
+        if(lastName != null) {
+            studentQuery.field("lastName").containsIgnoreCase(lastName);
+        }
+        if(birthday != null && dateRelation == null) {
+            studentQuery.field("birthday").equal(birthday);
+        }
 
-                )
-        );
+        if(birthday != null && dateRelation !=null) {
+            switch (dateRelation.toLowerCase()) {
+                case "equal":
+                    studentQuery.field("birthday").equal(birthday);
+                    break;
+                case "after":
+                    studentQuery.field("birthday").greaterThan(birthday);
+                    break;
+                case "before":
+                    studentQuery.field("birthday").lessThan(birthday);
+                    break;
+            }
+        }
 
         List<Student> students = studentQuery.asList();
         if (students == null || students.size() == 0) {
             return Response.status(Response.Status.NOT_FOUND).entity("No students").build();
         }
-/*
-        if (firstName != null && lastName == null && date == null && dateRelation == null) {
-            //students =  students.stream().filter(student -> student.getFirstName().equals(firstName)).collect(Collectors.toList());
-        }
-
-        if (lastName != null) {
-            //students =  students.stream().filter(student -> student.getLastName().equals(lastName)).collect(Collectors.toList());
-        }*/
-
-        if(birthday != null && dateRelation !=null) {
-            switch (dateRelation.toLowerCase()) {
-                case "equal":
-                    students = students.stream().filter(student -> student.getBirthday().equals(birthday)).collect(Collectors.toList());
-                    break;
-                case "after":
-                    students = students.stream().filter(student -> student.getBirthday().after(birthday)).collect(Collectors.toList());
-                    break;
-                case "before":
-                    students = students.stream().filter(student -> student.getBirthday().before(birthday)).collect(Collectors.toList());
-                    break;
-            }
-        }
-
 
         GenericEntity<List<Student>> entity = new GenericEntity<List<Student>>(Lists.newArrayList(students)) {};
         return Response.status(Response.Status.OK).entity(entity).build();
@@ -133,7 +123,7 @@ public class GradebookService {
             }
         }
 
-        Query<Student> studentUpdate = Databasemodel.getDatastore().createQuery(Student.class).field("index").equal(student.getIndex());
+        Query<Student> studentUpdate = Databasemodel.getDatastore().createQuery(Student.class).field("index").equal(index);
         UpdateOperations<Student> studentUpdateOperations = Databasemodel.getDatastore().createUpdateOperations(Student.class)
                 .set("firstName", student.getFirstName())
                 .set("lastName", student.getLastName())
@@ -179,8 +169,10 @@ public class GradebookService {
         if(searchedStudent == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Student not found").build();
         }
+
         List<Grade> grades = searchedStudent.getGrades();
-        if(grades == null || grades.isEmpty()) {
+        //List<Grade> grades = gradeQuery.asList();
+        if(grades == null || grades.size() == 0) {
             return Response.status(Response.Status.NOT_FOUND).entity("Grades not found").build();
         }
 
@@ -191,7 +183,7 @@ public class GradebookService {
         // filtering by grade's value
         if (value != null && valueRelation != null) {
             switch (valueRelation.toLowerCase()) {
-                case "grater":
+                case "greater":
                     grades = grades.stream().filter(gr -> gr.getValue() > Float.valueOf(value).floatValue()).collect(Collectors.toList());
                     break;
                 case "lower":
@@ -199,6 +191,7 @@ public class GradebookService {
                     break;
             }
         }
+
         GenericEntity<List<Grade>> entity = new GenericEntity<List<Grade>>(Lists.newArrayList(grades)) {};
 
         return Response.status(Response.Status.OK).entity(entity).build();
@@ -206,7 +199,7 @@ public class GradebookService {
 
     @POST
     @Path("students/{index}/grades")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response addGrade(@PathParam("index") long index, Grade grade) {
 
         if(grade != null) {
@@ -216,8 +209,9 @@ public class GradebookService {
                 return Response.status(Response.Status.NOT_FOUND).entity("Student not found").build();
             }
 
-            Course course = Databasemodel.getDatastore().createQuery(Course.class).field("name").equal(grade.getCourse().getName())
-                    .field("lecturer").equal(grade.getCourse().getLecturer()).get();
+            //Course course = Databasemodel.getDatastore().createQuery(Course.class).field("name").equal(grade.getCourse().getName())
+            //        .field("lecturer").equal(grade.getCourse().getLecturer()).get();
+            Course course = Databasemodel.getDatastore().createQuery(Course.class).field("id").equal(grade.getCourse().getId()).get();
             if (course ==null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("Course not found").build();
             }
@@ -233,6 +227,7 @@ public class GradebookService {
                 id = newGradeIndex;
             }
                 grade.setId(id);
+                grade.setValue(grade.getValue());
                 grade.setStudentIndex(searchedStudent.getIndex());
                 grade.setCourse(course);
                 searchedStudent.addGrade(grade);
@@ -274,7 +269,7 @@ public class GradebookService {
 
     @PUT
     @Path("/students/{index}/grades/{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateStudentGrade(@PathParam("index") long index,@PathParam("id") int id, Grade grade) {
 
         if(grade != null) {
@@ -289,13 +284,14 @@ public class GradebookService {
                 return Response.status(Response.Status.NOT_FOUND).entity("Grade not found").build();
             }
 
-            Course course = Databasemodel.getDatastore().createQuery(Course.class).field("name").equal(grade.getCourse().getName())
-                    .field("lecturer").equal(grade.getCourse().getLecturer()).get();
+            Course course = Databasemodel.getDatastore().createQuery(Course.class).field("id").equal(grade.getCourse().getId()).get();
+                    /*.field("lecturer").equal(grade.getCourse().getLecturer()).get();*/
             if (course ==null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("Course not found").build();
             }
 
             course.setId(grade.getCourse().getId());
+            grade.setCourse(course);
             grade.setId(id);
             grade.setStudentIndex(searchedStudent.getIndex());
             searchedStudent.updateStudentGrade(grade);
@@ -350,6 +346,11 @@ public class GradebookService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response getAllCourses(@QueryParam("lecturer") String lecturer) {
         Query<Course> courseQuery = Databasemodel.getDatastore().createQuery(Course.class);
+
+        if(lecturer != null) {
+            courseQuery.field("lecturer").containsIgnoreCase(lecturer);
+        }
+
         List<Course> courses = courseQuery.asList();
 
         if(courses == null || courses.size() == 0) {

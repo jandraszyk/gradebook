@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gradebook</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <img src="ic_home.png" height="80" width="80"  alt="Gradebook logo" />
+    <h1>Grades service</h1>
+</header>
+
+<nav id="menu">
+    <h3>Menu</h3>
+    <form>
+        <table>
+            <tr>
+                <td>
+                    <a href="#students">Manage students</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#courses">Manage courses</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</nav>
+<article id="students">
+    <form>
+        <table>
+            <caption><h2>List of students</h2></caption>
+            <tr>
+                <th>Index</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Birthday</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="index" value="121327" placeholder="Index" readonly required/>
+                </td>
+                <td>
+                    <input type="text" name="firstName" value="Jan" placeholder="First Name" required/>
+                </td>
+                <td>
+                    <input type="text" name="lastName" value="Andraszyk" placeholder="Last Name" required/>
+                </td>
+                <td>
+                    <input type="date" name="birthday" value="1995-04-26" required/>
+                </td>
+                <td>
+                    <a href="#student-grades">See grades</a>
+                    <button type="button">Delete</button>
+                    <button type="button">Modify</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="index" value="112121" placeholder="Index" readonly required/>
+                </td>
+                <td>
+                    <input type="text" name="firstName" value="Artur" placeholder="First Name" required/>
+                </td>
+                <td>
+                    <input type="text" name="lastName" value="Suchecki" placeholder="Last Name" required/>
+                </td>
+                <td>
+                    <input type="date" name="birthday" value="1995-08-28" required/>
+                </td>
+                <td>
+                    <a href="#student-grades">See grades</a>
+                    <button type="button">Delete</button>
+                    <button type="button">Modify</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="index" value="111847" placeholder="Index" readonly required/>
+                </td>
+                <td>
+                    <input type="text" name="firstName" value="Andrzej" placeholder="First Name" required/>
+                </td>
+                <td>
+                    <input type="text" name="lastName" value="Tarczyński" placeholder="Last Name" required/>
+                </td>
+                <td>
+                    <input type="date" name="birthday" value="1996-03-12" required/>
+                </td>
+                <td>
+                    <a href="#student-grades">See grades</a>
+                    <button type="button">Delete</button>
+                    <button type="button">Modify</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="index" placeholder="Index"  required/>
+                </td>
+                <td>
+                    <input type="text" name="firstName" placeholder="First Name" required/>
+                </td>
+                <td>
+                    <input type="text" name="lastName" placeholder="Last Name" required/>
+                </td>
+                <td>
+                    <input type="date" name="birthday" required/>
+                </td>
+                <td>
+                    <button type="submit" id="btAddStudent" style="width:100%">Add Student</button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</article>
+
+<article id="courses">
+    <form>
+        <table>
+            <caption><h2>List of courses</h2></caption>
+            <tr>
+                <th>Course name</th>
+                <th>Lecturer</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="name" value="ZWiWO" placeholder="Course name" required />
+                </td>
+                <td>
+                    <input type="text" name="lecturer" value="Marcin Szeląg" placeholder="Lecturer" required />
+                </td>
+                <td>
+                    <button type="button">Delete</button>
+                    <button type="button">Modify</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="name" value="Technologie Programistyczne: Aplikacje Lokalne" placeholder="Course Name" required />
+                </td>
+                <td>
+                    <input type="text" name="lecturer" value="Piotr Zielniewicz" placeholder="Lecturer" required />
+                </td>
+                <td>
+                    <button type="button">Delete</button>
+                    <button type="button">Modify</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="name" placeholder="Course name" required>
+                </td>
+                <td>
+                    <input type="text" name="lecturer" placeholder="Lecturer" required>
+                </td>
+                <td>
+                    <button type="submit" style="width:100%">Add Course</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</article>
+
+<article id="student-grades">
+    <form>
+        <table>
+            <caption><h2>Student grades</h2></caption>
+            <tr>
+                <th>Course name</th>
+                <th>Grade</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>
+                    <select >
+                        <option value="ZWiWO">ZWiWO</option>
+                        <option value="TPSI">Technologie Programistyczne: Systemy Internetowe</option>
+                        <option value="TPAL" selected>Technologie Programistyczne: Aplikacje Lokalne</option>
+                        <option value="PIT">Przebsiębiorczość w IT</option>
+                    </select>
+                </td>
+                <td>
+                    <select style="width:100%">
+                        <option value="2.0">2.0</option>
+                        <option value="3.0" selected>3.0</option>
+                        <option value="3.5">3.5</option>
+                        <option value="4.0">4.0</option>
+                        <option value="4.5">4.5</option>
+                        <option value="5.0">5.0</option>
+                    </select>
+                </td>
+                <td><input type="date" value="2018-05-16" required></td>
+                <td>
+                    <button type="button">Delete</button>
+                    <button type="button">Modify</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select>
+                        <option value="ZWiWO" selected>ZWiWO</option>
+                        <option value="TPSI">Technologie Programistyczne: Systemy Internetowe</option>
+                        <option value="TPAL" >Technologie Programistyczne: Aplikacje Lokalne</option>
+                        <option value="PIT">Przebsiębiorczość w IT</option>
+                    </select>
+                </td>
+                <td>
+                    <select style="width:100%">
+                        <option value="2.0">2.0</option>
+                        <option value="3.0" >3.0</option>
+                        <option value="3.5">3.5</option>
+                        <option value="4.0">4.0</option>
+                        <option value="4.5" selected>4.5</option>
+                        <option value="5.0">5.0</option>
+                    </select>
+                </td>
+                <td><input type="date" value="2018-05-16" required></td>
+
+                <td>
+                    <button type="button">Delete</button>
+                    <button type="button">Modify</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select style="width:100%" required>
+                        <option value="" disabled selected>Course name</option>
+                        <option value="ZWiWO" >ZWiWO</option>
+                        <option value="TPSI">Technologie Programistyczne: Systemy Internetowe</option>
+                        <option value="TPAL" >Technologie Programistyczne: Aplikacje Lokalne</option>
+                        <option value="PIT">Przebsiębiorczość w IT</option>
+                    </select>
+                </td>
+
+                <td>
+                    <select style="width:100%" required>
+                        <option value="" disabled selected>Grade</option>
+                        <option value="2.0">2.0</option>
+                        <option value="3.0" >3.0</option>
+                        <option value="3.5">3.5</option>
+                        <option value="4.0">4.0</option>
+                        <option value="4.5" >4.5</option>
+                        <option value="5.0">5.0</option>
+                    </select>
+                </td>
+                <td><input type="date"  required></td>
+                <td>
+                    <button type="submit" style="width:100%">Add Grade</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</article>
+<footer>
+    <h5>Autor: Jan Andraszyk  </h5>
+    <h5><a href="https://www.put.poznan.pl/pl">Politechnika Poznańska</a></h5>
+    <h5><a href="https://fc.put.poznan.pl/index.php">Wydział Informatyki</a></h5>
+</footer>
+</body>
+</html>

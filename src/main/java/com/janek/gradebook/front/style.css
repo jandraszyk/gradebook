@@ -1,0 +1,52 @@
+body {
+    margin: 0 auto;
+    padding: 0;
+}
+
+{
+    display: flex;
+    flex-direction: column;
+}
+
+article{
+    display:none
+}
+
+article:target{
+
+    display:block
+}
+header {
+    margin:0;
+    padding:1px;
+    background-color: #145DCC;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+header h3{
+    margin: 0;
+}
+
+
+#menu {
+    flex:
+    margin: 0;
+    background-color: #FF7340;
+}
+
+#menu h3 {
+    margin: 0;
+}
+
+#students {
+    flex:
+}
+
+#courses {
+    flex:
+}
+
+#student-grades {
+    flex:
+}
