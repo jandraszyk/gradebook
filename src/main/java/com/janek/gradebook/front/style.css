@@ -1,52 +1,299 @@
 body {
     margin: 0 auto;
-    padding: 0;
 }
 
-{
-    display: flex;
-    flex-direction: column;
-}
-
+/*------Article -------*/
 article{
-    display:none
+    display:none;
 }
+
+article a {
+    color: black;
+    text-decoration: none;
+}
+
+article a:hover {
+    color: black;
+}
+
 
 article:target{
 
     display:block
 }
+
+article h2 {
+    margin-left: 10px;
+}
+
+article table {
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    margin-left: 10px;
+    
+}
+
+article table td, article table th {
+    border: 1px solid black;
+    padding: 4px;
+}
+
+article table th{
+    font-size: 1.2em;
+    height: 100%;
+    padding-left: 10px;
+    text-align: center;
+    color: white;
+}
+
+
+article table select, #btSubmitGrade, #btSubmitCourse, #btAddStudent {
+    width: 100%
+}
+
+article table tr:nth-child(odd) {
+    background-color: #8995B2;
+}
+
+article table tr:nth-child(even) {
+    background-color: white;
+}
+
+article table tr:hover {
+    background-color: #FF7D40;
+    color: white;
+}
+
+article table tr input::placeholder {
+    color:black;
+}
+
+article table tr input:hover::placeholder {
+    color: white;
+}
+
+article table th input::placeholder {
+    color:white;
+}
+
+article td {
+    font-size: 1em;
+    margin: 0;
+    padding: 2px
+}
+
+table th input {
+    text-align: center;
+    font-family: inherit;
+    font-size: 0.85em;
+    width: auto;
+    border: none;
+    background-color: inherit;
+    color: inherit;
+}
+
+table tr input, table tr select {
+    width: auto;
+    border: none;
+    background-color: inherit;
+    color: inherit;
+    outline: none;
+}
+
+table tr td:last-of-type {
+    
+}
+
+table tr select option {
+    color: black;
+}
+
+table tr button, table tr a {
+    background-color: #373DB2;
+    color: white;
+    border: 1px solid black;
+    padding: 2px;
+    margin: 2px;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+table tr button:hover, table tr a:hover {
+    background-color: #878AB2;
+    color: black;
+}
+
+table tr input:invalid {
+    border: 2px solid black;
+    border-color: red;
+    color: white;
+}
+
 header {
     margin:0;
     padding:1px;
-    background-color: #145DCC;
+    background-color: #373DB2;
     display: flex;
     flex-wrap: wrap;
 }
 
-header h3{
-    margin: 0;
+
+header h1{
+    margin-left: 10px;
+    color: azure;
+}
+
+header img {
+    height: 80px;
+    width: 80px;
+}
+
+hr {
+    display: flex;
+    height: 0px;
+    border: 0;
+    border-top: 2px solid #CC3514;
+    margin: 0 auto;
+    padding: 0;
+}
+
+footer {
+    margin:0;
+    padding: 1px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background: linear-gradient(#979EA3,#FFF);
+}
+
+footer h5 {
+    font-size: 0.9em;
+    margin-left: 10px;
+    color: #616569;
+}
+
+th {
+    font-family: Arial;
+    font-size: 1em;
+    font-weight: normal;
+    background-color:  #373DB2;
+}
+
+th input::placeholder {
+    font-size: 1em;
+    font-family: Arial;
+    font-weight: normal;
 }
 
 
+footer h5 a {
+    color: #616569;
+    text-decoration: none;
+}
+
+ footer h5 a:hover {
+    color: #616569;
+    text-decoration: underline;
+}
+
 #menu {
-    flex:
-    margin: 0;
-    background-color: #FF7340;
+    font-size: 1.2em;
+    flex:1 1 auto;
+    display: inline-table;
+    background-color: #FF7D40;
 }
 
 #menu h3 {
     margin: 0;
+    margin-left: 10px;
+    color: black;
+}
+
+#menu div {
+    margin-left: 10px;
+}
+
+#menu a {
+    color: black;
+    text-decoration: none;
+}
+
+#menu a:hover {
+    text-decoration: underline;
+    color: azure;
 }
 
 #students {
-    flex:
+    flex: 5 0 50%;
 }
 
 #courses {
-    flex:
+    flex: 5 0 50%;
 }
 
 #student-grades {
-    flex:
+    flex: 5 0 50%;
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+h2 {
+    font-family: Arial, sans-serif;
+}
+
+@media print {
+    footer, #menu, header {
+        display: none;
+    }
+    
+    hr {
+        display: none;
+    }
+    
+    table tr:last-child{
+        border: none;
+        display: none;
+    }
+    
+    table tr td:last-child, table th:last-child {
+        display: none;
+    }
+    
+    table {
+        width: 100%;
+    }
+    
+    
+    article table th input::placeholder {
+        font-size: 1.2em;
+        color:black;
+    }
+    
+    article table tr select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    
+    article table th select::placeholder {
+        color:black;
+        font-size: 1.2em;
+    }
+    
+    article table {
+        margin-left: 0px;
+    }
+    
+    body {
+        background-color: white;
+        color: black;
+    }
+    
+    article table th, article table tr:nth-child(odd) {
+        background-color: white;
+    }
 }

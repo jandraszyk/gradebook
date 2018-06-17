@@ -18,6 +18,7 @@ public class Main {
                     .packages("org.glassfish.jersey.examples.linking")
                     .register(DeclarativeLinkingFeature.class)
                     .register(DateParamConverterProvider.class)
+                    .register(CustomHeaders.class)
                     .register(RestError.class);
             HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create("http://localhost:8000/"), resourceConfig);
         } catch (Exception e) {
