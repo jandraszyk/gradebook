@@ -23,7 +23,6 @@
     <div><a href="#courses">Manage courses</a></div>
 </nav>
 <article id="students">
-    <form>
         <h2>List of students</h2>
         <table>
             <thead>
@@ -58,7 +57,7 @@
             <tr>
                 <form data-bind="submit: students.add">
                     <td>
-                        <input type="number" name="index" placeholder="Index" step="1" min="0" readonly/>
+                        <input type="number" name="index" placeholder="Index" readonly/>
                     </td>
                     <td>
                         <input type="text" name="firstName" placeholder="First Name" required/>
@@ -75,11 +74,9 @@
                 </form>
             </tr>     
         </table>
-    </form>
 </article>
 
 <article id="courses">
-    <form>
         <h2>List of courses</h2>
         <table>
             <thead>
@@ -119,11 +116,9 @@
                    
             </tfoot>  
         </table>
-    </form>
 </article>
 
 <article id="student-grades">
-    <form>
         <h2>Student grades</h2>
         <table>
             <tr>
@@ -143,7 +138,7 @@
                     </select>
                 </td>
                 <td>
-                    <input required placeholder="Grade" type="number" data-bind="value: value" step="0.5" min="2.0" max="5.0">
+                    <input required placeholder="Grade" type="number" name="value" data-bind="value: value" step="0.5" min="2.0" max="5.0">
                 </td>
                 <td>
                     <input type="date" name="birthday" value="1996-03-12" required data-bind="value: date" title="date"/>
@@ -165,7 +160,7 @@
                     </td>
 
                     <td>
-                        <input required placeholder="Grade" type="number" step="0.5" min="2.0" max="5.0">
+                        <input required placeholder="Grade" name="value" type="number" step="0.5" min="2.0" max="5.0">
                     </td>
                     <td>
                         <input type="date" name="date" required/>
@@ -176,7 +171,6 @@
                 </form>   
             </tr>
         </table>
-    </form>
 </article>
 </div>
 <hr/>

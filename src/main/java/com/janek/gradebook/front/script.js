@@ -128,6 +128,7 @@ var collection = function(address, id) {
             this.reset();
         });
     }
+   
     
     self.delete = function () {
         self.remove(this);
@@ -141,8 +142,15 @@ var collection = function(address, id) {
         
 }
 
+
+
+
 function viewModel() {
     var self = this;
+    
+    var test = function() {
+        console.log("TEST POST");
+    }
     
     self.students = new collection(add + "/students","index");
     self.students.getGrades = function() {
