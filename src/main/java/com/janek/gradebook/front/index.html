@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <title>Gradebook</title>
     <link rel="stylesheet" href="style.css">
+    <script type="application/javascript" src="jquery.js"></script>
+    <script type="application/javascript" src="knockout.js"></script>
+    <script type="application/javascript" src="mapping.js"></script>
+    <script type="application/javascript" src="script.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-    <script src="jquery.js"></script>
-    <script>
-        $ (document).ready(function() {
-            alert("Document loaded");
-        });
-    </script>
+<body>   
 <header>
     <img src="ic_home.png"   alt="Gradebook logo" />
     <h1>Grades service</h1>
@@ -28,88 +26,54 @@
     <form>
         <h2>List of students</h2>
         <table>
+            <thead>
+                <tr>
+                    <th><input type="text" name="indexColumn" placeholder="Index" data-bind="textInput: model.students.getIndex"/></th>
+                    <th><input type="text" name="firstNameColumn" placeholder="First Name" data-bind="textInput: model.students.queryParams.firstName"/></th>
+                    <th><input type="text" name="lastNameColumn" placeholder="Last Name" data-bind="textInput: model.students.queryParams.lastName"/></th>
+                    <th><input type="text" name="birthdayColumn" onMouseOver="this.type='date'" onMouseOut="this.type='text'" placeholder="Birthday"data-bind="textInput: model.students.queryParams.birthday"/></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody data-bind='foreach: students'>
+                <tr>
+                    <td>
+                        <input type="number" name="index" value="121327" readonly data-bind="value: index" step="1" min="0" max="999999" required/>
+                    </td>
+                    <td>
+                        <input type="text" name="firstName" value="Jan" placeholder="First Name" required data-bind="value: firstName"/>
+                    </td>
+                    <td>
+                        <input type="text" name="lastName" value="Andraszyk" placeholder="Last Name" required data-bind="value: lastName"/>
+                    </td>
+                    <td>
+                        <input type="date" name="birthday" value="1995-04-26" required data-bind="value: birthday"/>
+                    </td>
+                    <td>
+                        <button data-bind="click: $parent.students.getGrades">See grades</button>
+                        <button data-bind="click: $parent.students.delete">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
             <tr>
-                <th><input type="text" name="indexColumn" placeholder="Index" /></th>
-                <th><input type="text" name="firstNameColumn" placeholder="First Name"/></th>
-                <th><input type="text" name="lastNameColumn" placeholder="Last Name" /></th>
-                <th><input type="text" name="birthdayColumn" onMouseOver="this.type='date'" onMouseOut="this.type='text'" placeholder="Birthday"/></th>
-                <th>Actions</th>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" name="index" value="121327" placeholder="Index" readonly required/>
-                </td>
-                <td>
-                    <input type="text" name="firstName" value="Jan" placeholder="First Name" required/>
-                </td>
-                <td>
-                    <input type="text" name="lastName" value="Andraszyk" placeholder="Last Name" required/>
-                </td>
-                <td>
-                    <input type="date" name="birthday" value="1995-04-26" required/>
-                </td>
-                <td>
-                    <button onclick="window.location.href='#student-grades'">See grades</button>
-                    <button type="button">Delete</button>
-                    <button type="button">Modify</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" name="index" value="112121" placeholder="Index" readonly required/>
-                </td>
-                <td>
-                    <input type="text" name="firstName" value="Artur" placeholder="First Name" required/>
-                </td>
-                <td>
-                    <input type="text" name="lastName" value="Suchecki" placeholder="Last Name" required/>
-                </td>
-                <td>
-                    <input type="date" name="birthday" value="1995-08-28" required/>
-                </td>
-                <td>
-                    <button onclick="window.location.href='#student-grades'">See grades</button>
-                    <button type="button">Delete</button>
-                    <button type="button">Modify</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" name="index" value="111847" placeholder="Index" readonly required/>
-                </td>
-                <td>
-                    <input type="text" name="firstName" value="Andrzej" placeholder="First Name" required/>
-                </td>
-                <td>
-                    <input type="text" name="lastName" value="Tarczyński" placeholder="Last Name" required/>
-                </td>
-                <td>
-                    <input type="date" name="birthday" value="1996-03-12" required/>
-                </td>
-                <td>
-                    <button onclick="window.location.href='#student-grades'">See grades</button>
-                    <button type="button">Delete</button>
-                    <button type="button">Modify</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" name="index" placeholder="Index"  required/>
-                </td>
-                <td>
-                    <input type="text" name="firstName" placeholder="First Name" required/>
-                </td>
-                <td>
-                    <input type="text" name="lastName" placeholder="Last Name" required/>
-                </td>
-                <td>
-                    <input type="date" name="birthday" required/>
-                </td>
-                <td>
-                    <button type="submit" id="btAddStudent">Add Student</button>
-                </td>
-            </tr>
-
+                <form data-bind="submit: students.add">
+                    <td>
+                        <input type="number" name="index" placeholder="Index" step="1" min="0" readonly/>
+                    </td>
+                    <td>
+                        <input type="text" name="firstName" placeholder="First Name" required/>
+                    </td>
+                    <td>
+                        <input type="text" name="lastName" placeholder="Last Name" required/>
+                    </td>
+                    <td>
+                        <input type="text" onfocus="(this.type='date')" onblur="this.type='text'"  name="birthday" placeholder="Date of birth" required/>
+                    </td>
+                    <td>
+                        <button type="submit" id="btAddStudent">Add Student</button>
+                    </td>
+                </form>
+            </tr>     
         </table>
     </form>
 </article>
@@ -118,46 +82,42 @@
     <form>
         <h2>List of courses</h2>
         <table>
-            <tr>
-                <th><input type="text" name="courseNameColumn" placeholder="Course Name" /></th>
-                <th><input type="text" name="lecturerColumn" placeholder="Lecturer" /></th>
-                <th>Actions</th>
-            </tr>
-            <tr>
+            <thead>
+                <tr>
+                    <th><input type="text" name="courseNameColumn" placeholder="Course Name" data-bind="textInput: model.courses.queryParams.name" /></th>
+                    <th><input type="text" name="lecturerColumn" placeholder="Lecturer" data-bind="textInput: model.courses.queryParams.lecturer" /></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody data-bind='foreach: courses'>
+                <tr>
                 <td>
-                    <input type="text" name="name" value="ZWiWO" placeholder="Course name" required />
+                    <input type="text" name="name" value="ZWiWO" placeholder="Course name" data-bind="value: name" required />
                 </td>
                 <td>
-                    <input type="text" name="lecturer" value="Marcin Szeląg" placeholder="Lecturer" required />
+                    <input type="text" name="lecturer" value="Marcin Szeląg" placeholder="Lecturer" data-bind="value: lecturer" required />
                 </td>
                 <td>
-                    <button type="button">Delete</button>
-                    <button type="button">Modify</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" name="name" value="Technologie Programistyczne: Aplikacje Lokalne" placeholder="Course Name" required />
-                </td>
-                <td>
-                    <input type="text" name="lecturer" value="Piotr Zielniewicz" placeholder="Lecturer" required />
-                </td>
-                <td>
-                    <button type="button">Delete</button>
-                    <button type="button">Modify</button>
+                    <button data-bind="click: $parent.courses.delete">Delete</button>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <input type="text" name="name" placeholder="Course name" required>
-                </td>
-                <td>
-                    <input type="text" name="lecturer" placeholder="Lecturer" required>
-                </td>
-                <td>
-                    <button id="btSubmitCourse" type="submit" >Add Course</button>
-                </td>
-            </tr>
+            </tbody>
+            <tfoot>
+                    <tr>
+                        <form data-bind="submit: courses.add">
+                            <td>
+                                <input type="text" name="name" placeholder="Course name" required>
+                            </td>
+                            <td>
+                                <input type="text" name="lecturer" placeholder="Lecturer" required>
+                            </td>
+                            <td>
+                                <button id="btSubmitCourse" type="submit" >Add Course</button>
+                            </td>
+                        </form>
+                    </tr>
+                   
+            </tfoot>  
         </table>
     </form>
 </article>
@@ -168,92 +128,52 @@
         <table>
             <tr>
                 <th><input type="text" name="courseNameColumn" placeholder="Course Name"/></th>
-                <th><input type="text" name="gradeColumn" placeholder="Grade" /></th>
+                <th><input type="number" step="0.5" min="2.0" max="5.0" name="gradeColumn" placeholder="Grade" /></th>
                 <th><input type="text" name="birthdayColumn" onMouseOver="this.type='date'" onMouseOut="this.type='text'" placeholder="Birthday"/></th>
                 <th>Actions</th>
             </tr>
+            <tbody data-bind="foreach: grades">
+                <tr>
+                   <td>
+                    <select required data-bind="options: $parent.courses,
+                                                optionsText: function(i) { return i.name(); },
+                                                optionsValue: function(i) {return i.id(); },
+                                                optionsCaption: 'Choose course',
+                                                value: course.id">
+                    </select>
+                </td>
+                <td>
+                    <input required placeholder="Grade" type="number" data-bind="value: value" step="0.5" min="2.0" max="5.0">
+                </td>
+                <td>
+                    <input type="date" name="birthday" value="1996-03-12" required data-bind="value: date" title="date"/>
+                </td>
+                <td>
+                    <button type="button" data-bind="click: $parent.grades.delete">Delete</button>
+                </td> 
+                </tr>  
+            </tbody>
             <tr>
-                <td>
-                    <select required>
-                        <option value="ZWiWO">ZWiWO</option>
-                        <option value="TPSI">Technologie Programistyczne: Systemy Internetowe</option>
-                        <option value="TPAL" selected>Technologie Programistyczne: Aplikacje Lokalne</option>
-                        <option value="PIT">Przebsiębiorczość w IT</option>
+                <form data-bind="submit: grades.add">
+                    <td>
+                    <select required data-bind="options: model.courses,
+                                                optionsText: function(i) { return i.name(); },
+                                                optionsValue: function(i) {return i.id(); },
+                                                optionsCaption: 'Choose course',
+                                                value: model.grades.selectedCourse">
                     </select>
-                </td>
-                <td>
-                    <select required>
-                        <option value="2.0">2.0</option>
-                        <option value="3.0" selected>3.0</option>
-                        <option value="3.5">3.5</option>
-                        <option value="4.0">4.0</option>
-                        <option value="4.5">4.5</option>
-                        <option value="5.0">5.0</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="date" name="birthday" value="1996-03-12" required/>
-                </td>
-                <td>
-                    <button type="button">Delete</button>
-                    <button type="button">Modify</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <select required>
-                        <option value="ZWiWO" selected>ZWiWO</option>
-                        <option value="TPSI">Technologie Programistyczne: Systemy Internetowe</option>
-                        <option value="TPAL" >Technologie Programistyczne: Aplikacje Lokalne</option>
-                        <option value="PIT">Przebsiębiorczość w IT</option>
-                    </select>
-                </td>
-                <td>
-                    <select>
-                        <option value="2.0">2.0</option>
-                        <option value="3.0" >3.0</option>
-                        <option value="3.5">3.5</option>
-                        <option value="4.0">4.0</option>
-                        <option value="4.5" selected>4.5</option>
-                        <option value="5.0">5.0</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="date" name="birthday" value="1996-03-12" required/>
-                </td>
-                <td>
-                    <button type="button">Delete</button>
-                    <button type="button">Modify</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <select required>
-                        <option value="" disabled selected>Course name</option>
-                        <option value="ZWiWO" >ZWiWO</option>
-                        <option value="TPSI">Technologie Programistyczne: Systemy Internetowe</option>
-                        <option value="TPAL" >Technologie Programistyczne: Aplikacje Lokalne</option>
-                        <option value="PIT">Przebsiębiorczość w IT</option>
-                    </select>
-                </td>
-                
-                <td>
-                    <select required>
-                        <option value="" disabled selected>Grade</option>
-                        <option value="2.0">2.0</option>
-                        <option value="3.0" >3.0</option>
-                        <option value="3.5">3.5</option>
-                        <option value="4.0">4.0</option>
-                        <option value="4.5" >4.5</option>
-                        <option value="5.0">5.0</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="date" name="birthday" required/>
-                </td>
-                <td>
-                    <button id="btSubmitGrade" type="submit">Add Grade</button>
-                </td>
+                    </td>
+
+                    <td>
+                        <input required placeholder="Grade" type="number" step="0.5" min="2.0" max="5.0">
+                    </td>
+                    <td>
+                        <input type="date" name="date" required/>
+                    </td>
+                    <td>
+                        <button id="btSubmitGrade" type="submit">Add Grade</button>
+                    </td>
+                </form>   
             </tr>
         </table>
     </form>

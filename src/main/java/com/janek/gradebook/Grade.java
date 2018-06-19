@@ -1,5 +1,6 @@
 package com.janek.gradebook;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
@@ -13,7 +14,6 @@ import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,11 +21,11 @@ import java.util.concurrent.atomic.AtomicLong;
 @Entity("grades")
 public class Grade {
 
-//    @InjectLinks({@InjectLink(value = "/students/{studentIndex}/grades/{id}", rel = "self"), @InjectLink(value = "/students/{studentIndex}/grades", rel = "parent")})
-//    @XmlElement(name = "link")
-//    @XmlElementWrapper(name = "links")
-//    @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
-//    List<Link> links;
+    @InjectLinks({@InjectLink(value = "/students/{studentIndex}/grades/{id}", rel = "self"), @InjectLink(value = "/students/{studentIndex}/grades", rel = "parent")})
+    @XmlElement(name = "link")
+    @XmlElementWrapper(name = "links")
+    @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    List<Link> links;
 
     @XmlTransient
     private long studentIndex;
@@ -37,9 +37,11 @@ public class Grade {
     private int id;
     private static int idNumber = 0;
     private float value;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "CET")
     private Date date;
 
-    @Reference
+    @Embedded
     private Course course;
 
 

@@ -125,7 +125,7 @@ public class Student {
     }
 
     public Grade getGradeById(int id) {
-        Optional<Grade> grade = getGrades().stream().filter(c -> c.getId() == id).findFirst();
+        Optional<Grade> grade = getGrades().stream().filter(c -> c.getId() == id).findAny();
         return grade.orElse(null);
     }
 

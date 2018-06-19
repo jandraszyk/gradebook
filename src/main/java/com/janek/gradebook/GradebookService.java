@@ -53,10 +53,6 @@ public class GradebookService {
 
         List<Student> students = studentQuery.asList();
         GenericEntity<List<Student>> entity = new GenericEntity<List<Student>>(Lists.newArrayList(students)) {};
-        if (students == null || students.size() == 0) {
-            return Response.status(Response.Status.NOT_FOUND).entity(entity).build();
-        }
-
         return Response.status(Response.Status.OK).entity(entity).build();
     }
 
@@ -64,7 +60,7 @@ public class GradebookService {
     @Path("/students")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response addStudent(Student student) {
-        if (student != null) {
+        /*if (student != null) {
             Course course;
             for (Grade grade : student.getGrades()) {
                 course = Databasemodel.getDatastore().createQuery(Course.class).field("name").equal(grade.getCourse().getName())
@@ -72,7 +68,7 @@ public class GradebookService {
                 if (course ==null) {
                     return Response.status(Response.Status.NOT_FOUND).entity("Course not found").build();
                 }
-            }
+            }*/
             long id = 0;
             Query<IdGenerator> query = Databasemodel.getDatastore().find(IdGenerator.class);
             if(query.countAll() == 0) {
@@ -87,8 +83,8 @@ public class GradebookService {
             student.setIndex(newId);
             Databasemodel.getDatastore().save(student);
             return Response.status(Response.Status.CREATED).header("Location","/students/" + student.getIndex()).entity("Student " + student + " added\n").build();
-        }
-        return Response.status(Response.Status.NO_CONTENT).entity("Specify the student").build();
+        //}
+        //return Response.status(Response.Status.NO_CONTENT).entity("Specify the student").build();
     }
 
     @GET
@@ -97,9 +93,9 @@ public class GradebookService {
     public Response getStudent(@PathParam("index") long index) {
         Student student = Databasemodel.getDatastore().createQuery(Student.class).field("index").equal(index).get();
 
-        if(student == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Student not found").build();
-        }
+        //if(student == null) {
+        //    return Response.status(Response.Status.NOT_FOUND).entity("Student not found").build();
+        //}
         return Response.status(Response.Status.OK).entity(student).build();
     }
 
@@ -114,23 +110,14 @@ public class GradebookService {
             return Response.status(Response.Status.NOT_FOUND).entity("Student not found").build();
         }
 
-        Course course;
-        for (Grade grade : student.getGrades()) {
-            course = Databasemodel.getDatastore().createQuery(Course.class).field("name").equal(grade.getCourse().getName())
-                    .field("lecturer").equal(grade.getCourse().getLecturer()).get();
-            if (course ==null) {
-                return Response.status(Response.Status.NOT_FOUND).entity("Course not found").build();
-            }
-        }
-
-        Query<Student> studentUpdate = Databasemodel.getDatastore().createQuery(Student.class).field("index").equal(index);
+        Query<Student> studentUpdate = Databasemodel.getDatastore().createQuery(Student.class).field("index").equal(student.getIndex());
         UpdateOperations<Student> studentUpdateOperations = Databasemodel.getDatastore().createUpdateOperations(Student.class)
                 .set("firstName", student.getFirstName())
                 .set("lastName", student.getLastName())
                 .set("birthday", student.getBirthday());
-        if(student.getGrades() != null && !student.getGrades().isEmpty()) {
+        //if(student.getGrades() != null && !student.getGrades().isEmpty()) {
             studentUpdateOperations.set("grades", student.getGrades());
-        }
+       //}
         Databasemodel.getDatastore().update(studentUpdate, studentUpdateOperations);
         return Response.status(Response.Status.OK).entity("Student " + student + " was updated").build();
 
@@ -165,17 +152,16 @@ public class GradebookService {
                                      @QueryParam("valueRelation") String valueRelation) {
 
         Student searchedStudent = Databasemodel.getDatastore().createQuery(Student.class).field("index").equal(index).get();
-
+/*
         if(searchedStudent == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Student not found").build();
         }
-
+*/
         List<Grade> grades = searchedStudent.getGrades();
-        //List<Grade> grades = gradeQuery.asList();
-        if(grades == null || grades.size() == 0) {
-            GenericEntity<List<Grade>> entityNoGrades = new GenericEntity<List<Grade>>(Lists.newArrayList(grades)){};
-            return Response.status(Response.Status.NOT_FOUND).entity(entityNoGrades).build();
-        }
+        //if(grades == null || grades.size() == 0) {
+        //    GenericEntity<List<Grade>> entityNoGrades = new GenericEntity<List<Grade>>(Lists.newArrayList(grades)){};
+        //    return Response.status(Response.Status.NOT_FOUND).entity(entityNoGrades).build();
+        //}
 
         if (courseName != null) {
             grades = grades.stream().filter(gr -> gr.getCourse().getName().equals(courseName)).collect(Collectors.toList());
@@ -194,11 +180,11 @@ public class GradebookService {
         }
 
         GenericEntity<List<Grade>> entity = new GenericEntity<List<Grade>>(Lists.newArrayList(grades)) {};
-        if(grades == null || grades.size() == 0) {
-            return Response.status(Response.Status.NOT_FOUND).entity(entity).build();
-        } else {
+        //if(grades == null || grades.size() == 0) {
+        //    return Response.status(Response.Status.NOT_FOUND).entity(entity).build();
+        //} else {
             return Response.status(Response.Status.OK).entity(entity).build();
-        }
+        //}
     }
 
     @POST
@@ -345,19 +331,23 @@ public class GradebookService {
     @GET
     @Path("/courses")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response getAllCourses(@QueryParam("lecturer") String lecturer) {
+    public Response getAllCourses(@QueryParam("lecturer") String lecturer,
+                                  @QueryParam("name") String name) {
         Query<Course> courseQuery = Databasemodel.getDatastore().createQuery(Course.class);
 
         if(lecturer != null) {
             courseQuery.field("lecturer").containsIgnoreCase(lecturer);
         }
+        if(name != null) {
+            courseQuery.field("name").containsIgnoreCase(name);
+        }
 
         List<Course> courses = courseQuery.asList();
         GenericEntity<List<Course>> entity = new GenericEntity<List<Course>>(Lists.newArrayList(courses)) {};
 
-        if(courses == null || courses.size() == 0) {
-            return Response.status(Response.Status.NOT_FOUND).entity(entity).build();
-        }
+        //if(courses == null || courses.size() == 0) {
+        //    return Response.status(Response.Status.NOT_FOUND).entity(entity).build();
+        //}
         return Response.status(Response.Status.OK).entity(entity).build();
     }
 
