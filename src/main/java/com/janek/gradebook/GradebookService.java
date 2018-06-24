@@ -82,7 +82,7 @@ public class GradebookService {
             long newId = id;
             student.setIndex(newId);
             Databasemodel.getDatastore().save(student);
-            return Response.status(Response.Status.CREATED).header("Location","/students/" + student.getIndex()).entity("Student " + student + " added\n").build();
+            return Response.status(Response.Status.CREATED).header("Location","/students/" + student.getIndex()).entity(student).build();
         //}
         //return Response.status(Response.Status.NO_CONTENT).entity("Specify the student").build();
     }
@@ -149,26 +149,26 @@ public class GradebookService {
     public Response getStudentGrades(@PathParam("index") long index,
                                      @QueryParam("courseName") String courseName,
                                      @QueryParam("value") String value,
-                                     @QueryParam("valueRelation") String valueRelation) {
+                                     @QueryParam("valueRelation") String valueRelation,
+                                     @QueryParam("date") Date date) {
 
         Student searchedStudent = Databasemodel.getDatastore().createQuery(Student.class).field("index").equal(index).get();
-/*
-        if(searchedStudent == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Student not found").build();
-        }
-*/
-        List<Grade> grades = searchedStudent.getGrades();
-        //if(grades == null || grades.size() == 0) {
-        //    GenericEntity<List<Grade>> entityNoGrades = new GenericEntity<List<Grade>>(Lists.newArrayList(grades)){};
-        //    return Response.status(Response.Status.NOT_FOUND).entity(entityNoGrades).build();
-        //}
 
+        List<Grade> grades = searchedStudent.getGrades();
         if (courseName != null) {
-            grades = grades.stream().filter(gr -> gr.getCourse().getName().equals(courseName)).collect(Collectors.toList());
+            grades = grades.stream().filter(gr -> gr.getCourse().getName().contains(courseName)).collect(Collectors.toList());
+        }
+
+        if (date != null) {
+            grades = grades.stream().filter(gr -> gr.getDate().equals(date)).collect(Collectors.toList());
+        }
+
+        if (value != null && !value.equals("")) {
+            grades = grades.stream().filter(gr -> gr.getValue() == Float.valueOf(value).floatValue()).collect(Collectors.toList());
         }
 
         // filtering by grade's value
-        if (value != null && valueRelation != null) {
+        if (value != "" && valueRelation != null) {
             switch (valueRelation.toLowerCase()) {
                 case "greater":
                     grades = grades.stream().filter(gr -> gr.getValue() > Float.valueOf(value).floatValue()).collect(Collectors.toList());
@@ -176,15 +176,17 @@ public class GradebookService {
                 case "lower":
                     grades = grades.stream().filter(gr -> gr.getValue() < Float.valueOf(value).floatValue()).collect(Collectors.toList());
                     break;
+                    default:
+                        grades = grades.stream().filter(gr -> gr.getValue() == Float.valueOf(value).floatValue()).collect(Collectors.toList());
+                        break;
+
             }
         }
 
         GenericEntity<List<Grade>> entity = new GenericEntity<List<Grade>>(Lists.newArrayList(grades)) {};
-        //if(grades == null || grades.size() == 0) {
-        //    return Response.status(Response.Status.NOT_FOUND).entity(entity).build();
-        //} else {
-            return Response.status(Response.Status.OK).entity(entity).build();
-        //}
+
+        return Response.status(Response.Status.OK).entity(entity).build();
+
     }
 
     @POST
@@ -228,7 +230,7 @@ public class GradebookService {
                     studentUpdateOperations.set("grades", searchedStudent.getGrades());
                 }
             Databasemodel.getDatastore().update(studentUpdate, studentUpdateOperations);
-                return Response.status(Response.Status.CREATED).header("Location","students/"+ searchedStudent.getIndex()+"/grades/"+grade.getId()).entity("Grade " + grade + " was added\n").build();
+                return Response.status(Response.Status.CREATED).header("Location","students/"+ searchedStudent.getIndex()+"/grades/"+grade.getId()).entity(grade).build();
         } else {
             return Response.status(Response.Status.NO_CONTENT).entity("Specify the grade").build();
         }
@@ -369,7 +371,7 @@ public class GradebookService {
             int newId = id;
             course.setId(newId);
             Databasemodel.getDatastore().save(course);
-            return Response.status(Response.Status.CREATED).header("Location", "/courses/" + course.getId()).entity("Course " + course + " was added").build();
+            return Response.status(Response.Status.CREATED).header("Location", "/courses/" + course.getId()).entity(course).build();
         } else {
             return Response.status(Response.Status.NO_CONTENT).entity("Specify the course").build();
         }

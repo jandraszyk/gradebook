@@ -2,62 +2,65 @@
 
 var add = "http://localhost:8000";
 
-var collection = function(address, id) {
+var collection = function (address, id) {
     var self = ko.observableArray();
     
     self.url = address;
     self.postUrl = self.url;
     
-    self.get = function(query) {
-        if(self.sub) {
-            self.sub.dispose();
-        }
+    self.get = function (query) {
+        
         
         var url = self.url;
         
-        if(query) {
+        if (query) {
             url = url + query;
         }
         $.ajax({
             dataType: "json",
             url: url,
-            success: function(data) {
+            success: function (data) {
+                if (self.sub) {
+                    self.sub.dispose();
+                }
                 self.removeAll();
                 
-                data.forEach(function(element) {
+                data.forEach(function (element) {
                     var object = ko.mapping.fromJS(element, { ignore: ["link"]});
                     object.links = [];
                     
-                    if ($.isArray(element.link)){ 
-                    element.link.forEach(function(link) {
-                        object.links[link.params.rel] = link.href;
-                    });
+                    if ($.isArray(element.link)) { 
+                        element.link.forEach(function(link) {
+                            object.links[link.params.rel] = link.href;
+                        });
                     } else {
                         object.links[element.link.params.rel] = element.link.href;
                     }
                     
                     self.push(object);
                     
-                    ko.computed(function() {
+                    console.log("GET object: " + address + "/" + object[id]());
+                    
+                    ko.computed(function () {
                         return ko.toJSON(object);
-                    }).subscribe(function() {
+                    }).subscribe(function () {
                         self.updateRequest(object);
                     });
                 });
                 
                 self.sub = self.subscribe(function (changes) {
                     changes.forEach(function (change) {
-                        if(change.status === 'added') {
+                        if (change.status === 'added') {
                             self.saveRequest(change.value);
                         }
                         if (change.status === 'deleted') {
                             self.deleteRequest(change.value);
                         }
                     });
-                },null, "arrayChange");
+                }, null, "arrayChange");
             }
         });
-    }
+    };
     
     self.saveRequest = function (object) {
         $.ajax({
@@ -66,31 +69,31 @@ var collection = function(address, id) {
             contentType: "application/json",
             data: ko.mapping.toJSON(object),
             method: "POST",
-            success: function(data) {
+            success: function (data) {
                 var response = ko.mapping.fromJS(data);
                 object[id](response[id]());
                 
                 object.links = [];
                 
-                if ($.isArray(data.link)){ 
-                    data.link.forEach(function(link) {
+                if ($.isArray(data.link)) { 
+                    data.link.forEach(function (link) {
                         object.links[link.params.rel] = link.href;
                     });
-                    } else {
-                        object.links[data.link.params.rel] = data.link.href;
-                    }
+                } else {
+                    object.links[data.link.params.rel] = data.link.href;
+                }
                                         
-                    ko.computed(function() {
-                        return ko.toJSON(object);
-                    }).subscribe(function() {
-                        self.updateRequest(object);
-                    });
+                ko.computed(function () {
+                    return ko.toJSON(object);
+                }).subscribe(function () {
+                    self.updateRequest(object);
+                });
             }
             
         });
-    }
+    };
     
-    self.updateRequest = function(object) {
+    self.updateRequest = function (object) {
         if (object['course'] != null) {
             object.course = ko.utils.arrayFirst(model.courses(), function (course) {
                 if (object.course.id() === course.id()) {
@@ -106,14 +109,14 @@ var collection = function(address, id) {
             method: "PUT"
             
         });
-    }
+    };
     
-    self.deleteRequest = function(object) {
+    self.deleteRequest = function (object) {
         $.ajax({
             url: add + object.links['self'],
             method: "DELETE"
         });
-    }
+    };
     
     self.add = function (form) {
         var data = {};
@@ -148,10 +151,6 @@ var collection = function(address, id) {
 function viewModel() {
     var self = this;
     
-    var test = function() {
-        console.log("TEST POST");
-    }
-    
     self.students = new collection(add + "/students","index");
     self.students.getGrades = function() {
         window.location = "#student-grades";
@@ -180,7 +179,7 @@ function viewModel() {
             self.students.getRelL(false);
 
             if (self.students.getRelG() === true)
-                self.students.queryParams.dateRelation("grater");
+                self.students.queryParams.dateRelation("after");
             else
                 self.students.queryParams.dateRelation("equal");
         }
@@ -194,7 +193,7 @@ function viewModel() {
             self.students.getRelG(false);
 
             if (self.students.getRelL() === true)
-                self.students.queryParams.dateRelation("lower");
+                self.students.queryParams.dateRelation("before");
             else
                 self.students.queryParams.dateRelation("equal");
         }
@@ -248,6 +247,27 @@ function viewModel() {
             this.reset();
         });
     }
+    
+    self.grades.queryParams = {
+        value: ko.observable(null),
+        courseName: ko.observable(null),
+        date: ko.observable(null)
+    }
+    
+    Object.keys(self.grades.queryParams).forEach(function (key) {
+        self.grades.url = add + '/students/' + self.grades.selectedStudent() + "/grades",
+        console.log(self.grades.queryParams[key]());
+        self.grades.queryParams[key].subscribe(function () {
+            self.grades.parseQuery();
+        });
+        
+        
+            
+        
+            
+        
+        
+    });
     
 }
 

@@ -30,7 +30,12 @@
                     <th><input type="text" name="indexColumn" placeholder="Index" data-bind="textInput: model.students.getIndex"/></th>
                     <th><input type="text" name="firstNameColumn" placeholder="First Name" data-bind="textInput: model.students.queryParams.firstName"/></th>
                     <th><input type="text" name="lastNameColumn" placeholder="Last Name" data-bind="textInput: model.students.queryParams.lastName"/></th>
-                    <th><input type="text" name="birthdayColumn" onMouseOver="this.type='date'" onMouseOut="this.type='text'" placeholder="Birthday"data-bind="textInput: model.students.queryParams.birthday"/></th>
+                    <th><input type="text" name="birthdayColumn" onMouseOver="this.type='date'" onMouseOut="this.type='text'" placeholder="Birthday"data-bind="textInput: model.students.queryParams.birthday"/>
+                    <img class="relButton" src="assets/up.png"/>
+                    <input type="checkbox" data-bind="checked: model.students.getRelL" value="UP">
+                    <img class="relButton" src="assets/down.png"/>
+                    <input type="checkbox" data-bind="checked: model.students.getRelG" value="DOWN">
+                    </th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -122,9 +127,9 @@
         <h2>Student grades</h2>
         <table>
             <tr>
-                <th><input type="text" name="courseNameColumn" placeholder="Course Name"/></th>
-                <th><input type="number" step="0.5" min="2.0" max="5.0" name="gradeColumn" placeholder="Grade" /></th>
-                <th><input type="text" name="birthdayColumn" onMouseOver="this.type='date'" onMouseOut="this.type='text'" placeholder="Birthday"/></th>
+                <th><input type="text" name="courseNameColumn" placeholder="Course Name" data-bind="textInput: model.grades.queryParams.courseName"/></th>
+                <th><input type="number" step="0.5" min="2.0" max="5.0" name="gradeColumn" placeholder="Grade" data-bind="textInput: model.grades.queryParams.value" /></th>
+                <th><input type="text" name="birthdayColumn" onMouseOver="this.type='date'" onMouseOut="this.type='text'" placeholder="Birthday" data-bind="textInput: model.grades.queryParams.date"/></th>
                 <th>Actions</th>
             </tr>
             <tbody data-bind="foreach: grades">

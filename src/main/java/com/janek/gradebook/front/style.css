@@ -245,6 +245,11 @@ h2 {
     font-family: Arial, sans-serif;
 }
 
+.relButton {
+    height: 0.8em;
+    width: 0.8em;
+}
+
 @media print {
     footer, #menu, header {
         display: none;
